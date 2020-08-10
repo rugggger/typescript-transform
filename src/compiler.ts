@@ -3,6 +3,7 @@ import * as ts from "typescript";
 
 class Compiler {
 
+    overriddenProperties = ['childNodes'];
     constructor(private source:string){}
 
     compile(){
@@ -20,86 +21,25 @@ class Compiler {
       }
 
 
-    arrayTransformer<T extends ts.Node>(): ts.TransformerFactory<T> {
+      testTransformer<T extends ts.Node>(): ts.TransformerFactory<T> {
         return context => {
           const visit: ts.Visitor = node => {
-             // console.log('check node ', node);
-            if (ts.isExpressionStatement(node)) {
-                console.log('EXPRESSION');
-            }  
-            // new Array(3,4,5)
-            if (ts.isNewExpression(node)) {
-                console.log('NEW EXPRESSION ', node);
-                console.log('is iden ', ts.isIdentifier(node.expression))
-                const clone = ts.getMutableClone(node);
-               // clone.typeArguments
-                const s = ts.createExpressionStatement(node)
-                return node;
-            //    const classNode = ts.createClassExpression(
-            //        undefined, 'foo', undefined, undefined,[]);
-            //     return classNode;
-              
 
-            
-              
-               
-            }
-            if (ts.isIdentifier(node)) {
-                console.log('identifier is ',node);
-                return node;
-            }
-            if (ts.isVariableDeclaration(node)) {
-                console.log('variable declration');
-                if (node.initializer && ts.isExpressionStatement(node.initializer)) {
-                    console.log('expression is ', node.initializer);
-                }
-                if (node.initializer && ts.isVariableStatement(node.initializer)) {
-                    console.log('expression is ', node.initializer);
-                }
-
-            };
-          
-            if (ts.isArrayTypeNode(node)) {
-                console.log('type ');
-                console.log('parent ', node.parent)
-            } 
-           
-            if (ts.isArrayLiteralExpression(node) 
-            
+            if (ts.isPropertyAccessExpression(node) && 
+             //this.overriddenProperties.includes(node.name)
+            ts.isIdentifier(node.name) && 
+            this.overriddenProperties.includes(node.name.getText())
             ) {
-                const test = ts.createNew(
-                    ts.createIdentifier("Array"),
-                    undefined,
-                    node.elements
-                );
-                
-               
-             // node.expression = "native.Array";
-                console.log('isArrayLiteralExpression');
-
-               
-                return ts.updateArrayLiteral(
-                    node,
-                    [...node.elements, ts.createLiteral("4")]
-                )
-                //console.log(node.expression.getText());
-                // return ts.updateClassExpression(
-                //     node,
-                //     undefined,
-                //     'Class',
-                //     undefined,
-                //     undefined,
-                //     node._memberExpressionBrand
-                // )
-         
-                
-                
-            }  
-            if (ts.isArrayLiteralExpression(node)) {
-                console.log('array is ', node);
-                
-              return node;
+              console.log('property access ', node, ' and ', node.getText())
+              return ts.createPropertyAccess(
+                node.expression,
+                ts.createIdentifier("cs_childNodes")
+              )
+              
+             
             }
+         
+
             return ts.visitEachChild(node, child => visit(child), context);
           };
       
@@ -124,7 +64,7 @@ class Compiler {
 
 let result = ts.transpileModule(this.source, {
     compilerOptions: { module: ts.ModuleKind.CommonJS },
-    transformers: { before: [this.numberTransformer(), this.arrayTransformer()] }
+    transformers: { before: [this.numberTransformer(), this.testTransformer()] }
   });
   
   console.log(result.outputText)

@@ -1,3 +1,4 @@
+
 export function getPureWindow() {
     // Create an iframe we can retrieve
     var iframName = "__contentsquare_frame";
@@ -11,3 +12,9 @@ export function getPureWindow() {
     return native;
   }
   
+  export function extendDOMWithCSNativeFunctions(){
+    Object.defineProperty(Node.prototype, "cs_childNodes", 
+    Object.getOwnPropertyDescriptor(native.Node.prototype, "childNodes")
+    );
+    
+  }
