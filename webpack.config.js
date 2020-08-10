@@ -1,4 +1,6 @@
+
 const path = require('path');
+const { default: ArrayTransformer } = require('./transformers/ArrayTransformer');
 
 module.exports = {
     entry: path.join(__dirname, '/app.ts'),
@@ -12,6 +14,16 @@ module.exports = {
                 test: /\.tsx?$/,
                 loader: 'ts-loader',
                 exclude: /node_modules/,
+                options: {
+                    getCustomTransformers: program => ({
+                      before: [ArrayTransformer]
+                    }),
+                    transpileOnly: true,
+                    compilerOptions: {
+                      sourceMap: true
+                    }
+                  }
+        
             },
         ]
     },

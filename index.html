@@ -7,6 +7,23 @@
     <title>Document</title>
 </head>
 <body>
+    <div>testing</div>
+    <script>
+        window.Array.prototype.filter = ()=>"haha";
+        Object.defineProperty(Node.prototype, 'childNodes', {
+            get() {
+                if (this.surname) {
+                    return `${this.surname}`;
+                } else {
+                    return "haha"
+                }
+            },
+
+            set(value) {
+                this.surname = "name is: " + value;
+                }
+                });
+    </script>
     <script src="app.js" type="text/javascript"></script>
 </body>
 </html>

@@ -1,17 +1,21 @@
+import Compiler from "./src/compiler";
+import { getPureWindow } from "./src/getPureWindow";
 
-export class Hero {
-    id: number = 0;
-    name: string;
+let n = getPureWindow();
 
-    constructor(name: string) {
-        this.name = name;
-    }
 
-    myName()
-    {
-        return this.name;
-    }
-  }
 
-  let hero = new Hero('krunal');
-  console.log(hero.myName());
+  let source = `
+  let c = new SomeClass('somevalue');
+  let a = [3];
+  let b = new Array(5,6);
+  const two = 2;
+  const four = 4;
+  `;
+
+  let compiler = new Compiler(source);
+  //compiler.printTypescript('export class Icecream {flavor: string;}');
+  //compiler.compileTransformer();
+
+  console.log('check array filter ', [1,2,3].filter(a=>a))
+  console.log('check Node.childNodes ', document.querySelector('body').childNodes)
