@@ -5,18 +5,17 @@ let n = getPureWindow();
 extendDOMWithCSNativeFunctions();
 
 
-  let source = `
-  console.log(
-    document.querySelector('body').childNodes);
-let a = document.querySelector('body');
-console.log(a.childNodes)
+  (function(){
+    var Date = native.Date;
 
-
-  `;
+  let source = ``;
 
   let compiler = new Compiler(source);
-  //compiler.printTypescript('export class Icecream {flavor: string;}');
-  compiler.compileTransformer();
+  //compiler.compileTransformer();
 
   console.log('check array filter ', [1,2,3].filter(a=>a))
-  console.log('check Node.childNodes ', document.querySelector('body').childNodes)
+  console.log('check Node.childNodes ', document.querySelector('body').childNodes);
+  console.log('check Date.now ', Date.now());
+
+
+  })()

@@ -21,7 +21,38 @@ class Compiler {
       }
 
 
-      testTransformer<T extends ts.Node>(): ts.TransformerFactory<T> {
+      IFunctionTransformer<T extends ts.Node>(): ts.TransformerFactory<T> {
+        return context => {
+          const visit: ts.Visitor = node => {
+         
+            if (ts.isSourceFile(node)) {
+              console.log('source statement !', node);
+              const text = `
+              // self invoked function begin
+                (function(){
+                  var Date = native.date;
+                  ${node.getText()}
+                })()
+                // self invoked function end
+                `
+              ;
+        
+              return ts.createSourceFile(
+                node.fileName,
+                text,    
+                node.languageVersion,
+                true,
+                3
+              )
+            }
+
+            return ts.visitEachChild(node, child => visit(child), context);
+          };
+      
+          return node => ts.visitNode(node, visit);
+        };
+      }
+      propertyTransformer<T extends ts.Node>(): ts.TransformerFactory<T> {
         return context => {
           const visit: ts.Visitor = node => {
 
@@ -64,7 +95,10 @@ class Compiler {
 
 let result = ts.transpileModule(this.source, {
     compilerOptions: { module: ts.ModuleKind.CommonJS },
-    transformers: { before: [this.numberTransformer(), this.testTransformer()] }
+    transformers: { before: [
+      this.IFunctionTransformer(),
+      this.numberTransformer(),
+       this.propertyTransformer()] }
   });
   
   console.log(result.outputText)

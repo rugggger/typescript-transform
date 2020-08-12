@@ -17,7 +17,10 @@ module.exports = {
                 exclude: /node_modules/,
                 options: {
                     getCustomTransformers: program => ({
-                      before: [ArrayTransformer,NodeTransformer]
+                      before: [
+                          ArrayTransformer,
+                          NodeTransformer,
+                        ]
                     }),
                     transpileOnly: true,
                     compilerOptions: {
