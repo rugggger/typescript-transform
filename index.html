@@ -7,9 +7,19 @@
     <title>Document</title>
 </head>
 <body>
-    <div>testing</div>
+    <p>Open dev tools to see the console.logged results of the</p>
+    <p>overridden functions</p>
+    <ul>
+        <li>Array.filter</li>
+        <li>String.toLocaleUpperCase</li>
+        <li>Node.childNodes</li>
+        <li>Date.now</li>
+    </ul>
     <script>
+        // here we are overriding some native functions which our transpiled typescript
+        // will later attempt to use
         window.Array.prototype.filter = ()=>"haha";
+        window.String.prototype.toLocaleUpperCase = ()=>"haha"
         Object.defineProperty(Node.prototype, 'childNodes', {
             get() {
                 if (this.surname) {
@@ -24,7 +34,7 @@
                 }
                 });
           Date.now = ()=>"haha";
-                
+
     </script>
     <script src="app.js" type="text/javascript"></script>
 </body>

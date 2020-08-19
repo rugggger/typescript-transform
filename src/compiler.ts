@@ -21,6 +21,7 @@ class Compiler {
       }
 
 
+      
       IFunctionTransformer<T extends ts.Node>(): ts.TransformerFactory<T> {
         return context => {
           const visit: ts.Visitor = node => {
@@ -56,6 +57,14 @@ class Compiler {
         return context => {
           const visit: ts.Visitor = node => {
 
+            if (ts.isPropertyAccessExpression(node)) {
+              console.log('property access on ',node, node.expression.flags);
+              // if (ts.is(node.expression)) {
+              //   console.log('property access on string ?', node);
+
+              // }
+              // ts.TypeFlags.String
+            }
             if (ts.isPropertyAccessExpression(node) && 
              //this.overriddenProperties.includes(node.name)
             ts.isIdentifier(node.name) && 
@@ -71,6 +80,39 @@ class Compiler {
             }
          
 
+            return ts.visitEachChild(node, child => visit(child), context);
+          };
+      
+          return node => ts.visitNode(node, visit);
+        };
+      }
+    StringTransformer<T extends ts.Node>(): ts.TransformerFactory<T> {
+        return context => {
+          //const t = conte
+          
+          const visit: ts.Visitor = node => {
+            if (ts.isPropertyAccessExpression(node)) {
+              console.log('property access ', node);
+            //  ts.check
+              console.log('type of expression', node.expression);
+              console.log(node.expression.kind);
+              if (node.expression.kind === ts.SyntaxKind.StringLiteral) {
+                console.log('string literal')
+              }
+            }
+            if (ts.isStringLiteral(node)) {
+              if (ts.isImportDeclaration(node.parent)) {
+                console.log("DONT TOUCH")
+              }
+              console.log('string literal', node);
+              const text = node.getText().split('"').join('');
+              return ts.createNew(
+                ts.createIdentifier("String"),
+                undefined,
+                [ts.createStringLiteral(text)]
+              )
+              
+            }
             return ts.visitEachChild(node, child => visit(child), context);
           };
       
@@ -93,10 +135,19 @@ class Compiler {
       compileTransformer(){
 
 
+      // const p =   ts.createProgram(
+      //   {
+      //   rootNames: ['rootnames'],
+      //   options:{ module: ts.ModuleKind.CommonJS },
+      //   }
+      // );
+      // const t = p.getTypeChecker();
+
 let result = ts.transpileModule(this.source, {
     compilerOptions: { module: ts.ModuleKind.CommonJS },
     transformers: { before: [
       this.IFunctionTransformer(),
+      this.StringTransformer(),
       this.numberTransformer(),
        this.propertyTransformer()] }
   });

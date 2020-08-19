@@ -3,7 +3,7 @@
 exports.__esModule = true;
 var ts = require("typescript");
 const { isConditionalExpression } = require("typescript");
-const stringNative = "String";
+const stringNative = "native.String";
 var transformer = function (context) {
   var visitor = function (node) {
 
@@ -14,8 +14,11 @@ var transformer = function (context) {
     ) {
          console.log('string literal', node.text);
          const text = node.getText().split('"').join('');
+         if (text==="__contentsquare_frame") {return}
+         //if (text==="none") {return}
+
         return ts.createNew(
-          ts.createIdentifier("String"),
+          ts.createIdentifier(stringNative),
           undefined,
           [ts.createStringLiteral(text)]
         )
