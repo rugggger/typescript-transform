@@ -21,8 +21,8 @@ extendDOMWithCSNativeFunctions();
   console.log('check array filter ', [1,2,3].filter(a=>a))
   console.log('check Node.childNodes ', document.querySelector('body').childNodes);
   console.log('check Date.now ', Date.now());
- // console.log('check String.toLocaleUpperCase ', "abcde".toLocaleUpperCase());
-// console.log('check String.toLocaleUpperCase ', new String("abcde").toLocaleUpperCase());
-
+  console.log('check String.toLocaleUpperCase ', "abcde".toLocaleUpperCase());
+  console.log('check String.toLocaleUpperCase ', new native.String("lkjlkj").toLocaleUpperCase());
+  console.log('check String.toLocaleUpperCase ', native.String.prototype.toLocaleUpperCase());
 
   })()

@@ -18,14 +18,14 @@ module.exports = {
                 exclude: /node_modules/,
                 options: {
                     getCustomTransformers: program => {
-                        return ({
+                        return {
                       before: [
                           ArrayTransformer,
                           NodeTransformer,
-                        // StringTransformer,
+                        //  StringTransformer(program),
 
                         ]
-                    })
+                    }
                 },
                     transpileOnly: true,
                     compilerOptions: {
