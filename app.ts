@@ -17,19 +17,17 @@ declare var native;
   console.log(a.toUpperCase());
   `;
 
-  let compiler = new Compiler(source);
-  compiler.compileTransformer();
+   let compiler = new Compiler(source);
+   compiler.compileTransformer();
 
   console.log('check array filter ', [1,2,3].filter(a=>a))
-  const bodyElement = document.querySelector('body');
-  if (document && bodyElement) {
-    console.log('check Node.childNodes ', bodyElement.childNodes);
-  }
-  //console.log('check Node.childNodes ', document.querySelector('body').childNodes);
 
+  console.log('check Node.childNodes ', document.querySelector('body').childNodes);
+
+  let s = "asdasd";
   console.log('check Date.now ', Date.now());
   console.log('check String.toLocaleUpperCase ', "abcde".toLocaleUpperCase());
+  console.log('check String.toLocaleUpperCase ', s.toLocaleUpperCase());
   console.log('check String.toLocaleUpperCase ', new native.String("lkjlkj").toLocaleUpperCase());
-  console.log('check String.toLocaleUpperCase ', native.String.prototype.toLocaleUpperCase());
 
   })()

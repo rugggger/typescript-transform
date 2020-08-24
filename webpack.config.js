@@ -5,9 +5,9 @@ const { default: NodeTransformer } = require('./transformers/NodeTransformer');
 const { default: StringTransformer } = require('./transformers/StringTransformer');
 
 module.exports = {
-    entry: path.join(__dirname, '/app2.ts'),
+    entry: path.join(__dirname, '/app.ts'),
     output: {
-        filename: 'app2.js',
+        filename: 'app.js',
         path: __dirname
     },
     module: {
@@ -27,7 +27,7 @@ module.exports = {
                         ]
                     }
                 },
-                ignoreDiagnostics: [2345],
+                ignoreDiagnostics: [2345,2531],
                    //transpileOnly: true,
                     compilerOptions: {
                       sourceMap: true
