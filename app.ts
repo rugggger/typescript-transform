@@ -5,6 +5,8 @@ let n = getPureWindow();
 extendDOMWithCSNativeFunctions();
 
 
+declare var native;
+
   (function(){
     var Date = native.Date;
 
@@ -19,7 +21,12 @@ extendDOMWithCSNativeFunctions();
   compiler.compileTransformer();
 
   console.log('check array filter ', [1,2,3].filter(a=>a))
-  console.log('check Node.childNodes ', document.querySelector('body').childNodes);
+  const bodyElement = document.querySelector('body');
+  if (document && bodyElement) {
+    console.log('check Node.childNodes ', bodyElement.childNodes);
+  }
+  //console.log('check Node.childNodes ', document.querySelector('body').childNodes);
+
   console.log('check Date.now ', Date.now());
   console.log('check String.toLocaleUpperCase ', "abcde".toLocaleUpperCase());
   console.log('check String.toLocaleUpperCase ', new native.String("lkjlkj").toLocaleUpperCase());

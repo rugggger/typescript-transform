@@ -14,6 +14,7 @@ export function getPureWindow() {
     return native;
   }
   
+  declare var native
   // in this function we are extending some DOM objects whose methods may have been overridden
   // with pure versions of these methods.
   // we prefix our pure methods with 'cs_'
