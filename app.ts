@@ -17,8 +17,8 @@ declare var native;
   console.log(a.toUpperCase());
   `;
 
-   let compiler = new Compiler(source);
-   compiler.compileTransformer();
+   //let compiler = new Compiler(source);
+   //compiler.compileTransformer();
 
   console.log('check array filter ', [1,2,3].filter(a=>a))
 
@@ -28,6 +28,5 @@ declare var native;
   console.log('check Date.now ', Date.now());
   console.log('check String.toLocaleUpperCase ', "abcde".toLocaleUpperCase());
   console.log('check String.toLocaleUpperCase ', s.toLocaleUpperCase());
-  console.log('check String.toLocaleUpperCase ', new native.String("lkjlkj").toLocaleUpperCase());
 
   })()
