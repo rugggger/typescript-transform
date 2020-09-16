@@ -36,9 +36,14 @@ declare var native;
   console.log("check Date.now ", Date.now());
   console.log("check String.toLocaleUpperCase ", "abcde".toLocaleUpperCase());
   console.log("check String.toLocaleUpperCase ", s.toLocaleUpperCase());
+  console.log("check String.substr ", "a*bc*de".substr(2,3));
+  console.log("check s.substr ", s.substr(2,3));
+  console.log("check s.substr ", s.substr(2,3).split(""));
 
-  console.log('set listeners')
-  window.addEventListener("mousemove", function (e) {
-    console.log('app.ts mousemove event',e)
-  });
+
+
+  // console.log('set listeners')
+  // window.addEventListener("mousemove", function (e) {
+  //   console.log('app.ts mousemove event',e)
+  // });
 })();

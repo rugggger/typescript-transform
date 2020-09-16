@@ -2,36 +2,72 @@
 
 exports.__esModule = true;
 var ts = require("typescript");
-const stringNative = "native.String";
+const nativeString = "nativeString";
 var transformer = function (typechecker) {
   return function (context) {
     var visitor = function (node) {
-      if (ts.isPropertyAccessExpression(node)) {
-        let propertyIdentifier = "";
-       // check if property is accessed on a string literal ("string".replace())
-        if (ts.isStringLiteral(node.expression)) {
-          propertyIdentifier = node.name.getText();
-          const literalString = node.expression.getText();
-          return ts.createPropertyAccess(
-            ts.createNew(ts.createIdentifier(stringNative), undefined, [
-              ts.createIdentifier(literalString),
-            ]),
-            ts.createIdentifier(propertyIdentifier)
-          );
-        }
-        // else, check if property is accessed on var type string (s.replace())
-        const type = typechecker.getTypeAtLocation(node.expression);
-        if (type.intrinsicName === "string") {
-          propertyIdentifier = node.name.getText();
-          const stringVar = node.expression.getText();
-          return ts.createPropertyAccess(
-            ts.createNew(ts.createIdentifier(stringNative), undefined, [
-              ts.createIdentifier(stringVar),
-            ]),
-            ts.createIdentifier(propertyIdentifier)
-          );
-        }
+      // change "sdfsdfsdf".toLocaleUpperCase() ->
+      //
+      if (
+        ts.isCallExpression(node) &&
+        ts.isPropertyAccessExpression(node.expression) &&
+        ts.isStringLiteral(node.expression.expression)
+      ) {
+        const methodName = node.expression.name.getText();
+        const callArgs = node.arguments;
+        const literalString = node.expression.expression.text;
+        const args = [ts.createStringLiteral(literalString), ...callArgs];
+        return ts.createCall(
+          ts.createPropertyAccess(
+            ts.createPropertyAccess(
+              ts.createPropertyAccess(
+                ts.createIdentifier(nativeString),
+                ts.createIdentifier("prototype")
+              ),
+              ts.createIdentifier(methodName)
+            ),
+            ts.createIdentifier("call")
+          ),
+          undefined,
+          args
+        );
       }
+
+      // change s.toLocaleUpperCase() ->
+      if (
+        ts.isCallExpression(node) &&
+        ts.isPropertyAccessExpression(node.expression) &&
+        // if has method
+        (node.expression.name) &&
+        // if the expression is a variable (not another expression)
+        (node.expression.expression.text) &&
+        // and it evaluates to string
+        typechecker.getTypeAtLocation(node.expression.expression)
+          .intrinsicName === "string"
+      ) {
+        const methodName = node.expression.name.getText();
+        const callArgs = node.arguments;
+        const varName = node.expression.expression.text;
+
+        return ts.createCall(
+          ts.createPropertyAccess(
+            ts.createPropertyAccess(
+              ts.createPropertyAccess(
+                ts.createIdentifier(nativeString),
+                ts.createIdentifier("prototype")
+              ),
+              ts.createIdentifier(methodName)
+            ),
+            ts.createIdentifier("call")
+          ),
+          undefined,
+          [
+            ts.createIdentifier(varName),
+            ...callArgs
+          ]
+        )
+      }
+
       return ts.visitEachChild(node, visitor, context);
     };
     return function (node) {

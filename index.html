@@ -19,6 +19,7 @@
         // here we are overriding some native functions which our transpiled typescript
         // will later attempt to use
         window.Array.prototype.filter = ()=>"haha";
+        window.String.prototype.substr = ()=>"haha"
         window.String.prototype.toLocaleUpperCase = ()=>"haha"
         Object.defineProperty(Node.prototype, 'childNodes', {
             get() {
