@@ -7,7 +7,8 @@ var transformer = function (context) {
   var visitor = function (node) {
     if (ts.isPropertyAccessExpression(node) && 
         ts.isIdentifier(node.name) && 
-        overriddenProperties.includes(node.name.getText())
+        node.name && node.name.text &&
+        overriddenProperties.includes(node.name.text)
    ) {
      return ts.createPropertyAccess(
        node.expression,

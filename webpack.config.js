@@ -20,10 +20,9 @@ module.exports = {
                     getCustomTransformers: program => {
                         return {
                       before: [
-                          ArrayTransformer,
+                          ArrayTransformer(program),
                           NodeTransformer,
-                         StringTransformer(program),
-
+                          StringTransformer(program),
                         ]
                     }
                 },

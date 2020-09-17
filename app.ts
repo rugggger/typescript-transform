@@ -39,7 +39,19 @@ declare var native;
   console.log("check String.substr ", "a*bc*de".substr(2,3));
   console.log("check s.substr ", s.substr(2,3));
   console.log("check s.substr ", s.substr(2,3).split(""));
+  interface iY {
+    name: string
+  }
+  let arrTyped: iY[] = [
+    {name:"yar"},  {name:"se"}
+  ]
 
+   const arr = [1,2,300,4000];
+   let arr2 = [1,2,300]
+  console.log(arrTyped.filter(a => a.name === "yar"));
+  console.log(arr.filter(a => a> 100));
+  console.log(arr2.filter(a => a> 100));
+   console.log([1000,2000,3].filter(a => a> 100));
 
 
   // console.log('set listeners')
