@@ -20,6 +20,20 @@ const nativeArray = "nativeArray";
 var transformer = function (typechecker) {
   return function (context) {
     var visitor = function (node) {
+      // 1. First check: chained expression
+      // if it's array.filter().join().map() then I want to change only the first part
+      // meaning 
+      // if property access is a call expression - ignore and dont change
+      if (
+        ts.isCallExpression(node) &&
+        ts.isPropertyAccessExpression(node.expression) &&
+        ts.isCallExpression(node.expression.expression)
+
+      ) {
+        return ts.visitEachChild(node, visitor, context);
+        
+      }
+
       if (
         ts.isCallExpression(node) &&
         ts.isPropertyAccessExpression(node.expression)

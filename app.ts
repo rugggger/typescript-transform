@@ -53,7 +53,8 @@ declare var native;
   console.log(arr2.filter(a => a> 100));
    console.log([1000,2000,3].filter(a => a> 100));
 
-
+   let arr3 = ["i","t","w","o","r","k","s"]
+   console.log(arr3.filter(a =>a !=="b").map(a=> `(${a})`).join('---'));
   // console.log('set listeners')
   // window.addEventListener("mousemove", function (e) {
   //   console.log('app.ts mousemove event',e)
