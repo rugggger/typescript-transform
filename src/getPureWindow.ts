@@ -11,6 +11,8 @@ export function getPureWindow() {
     document.body.appendChild(newIframe);
     var native = window.frames[iframName]; // get ref to our iframe
     window["native"] = native;
+    window["nativeArray"] = native.Array;
+    window["nativeString"] = native.String;
     return native;
   }
   
