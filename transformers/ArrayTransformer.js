@@ -43,7 +43,7 @@ var transformer = function (typechecker) {
         if (typeNameS === "Array") {
           const methodName = node.expression.name.getText();
           const callArgs = node.arguments;
-          const identifier = node.expression.expression.getText();
+          const expression = node.expression.expression;
           console.log("type ", typeNameS);
           return ts.createCall(
             ts.createPropertyAccess(
@@ -57,7 +57,7 @@ var transformer = function (typechecker) {
               ts.createIdentifier("call")
             ),
             undefined,
-            [ts.createIdentifier(identifier), ...callArgs]
+            [expression, ...callArgs]
           );
         }
       }
