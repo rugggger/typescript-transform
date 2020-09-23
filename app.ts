@@ -55,6 +55,20 @@ declare var native;
 
    let arr3 = ["i","t","w","o","r","k","s"]
    console.log(arr3.filter(a =>a !=="b").map(a=> `(${a})`).join('---'));
+   console.log(arr3.filter(a =>a !=="b").join('---'));
+   console.log(
+    "testing chained literal array calls",
+    ["item1", "itemToFilter", "item2"]
+      .filter(item => item !== "itemToFilter")
+      .join()
+  );
+  const arr4 =   ["item1", "itemToFilter", "item2"];
+  console.log(
+    "testing chained array calls",
+    arr4
+      .filter(item => item !== "itemToFilter")
+      .join()
+  );
   // console.log('set listeners')
   // window.addEventListener("mousemove", function (e) {
   //   console.log('app.ts mousemove event',e)

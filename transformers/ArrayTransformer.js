@@ -13,6 +13,31 @@ function getType(type) {
   }
   return null;
 }
+function typeIsArray(type) {
+  return getType(type) === 'Array'
+}
+function constructSafeCall(node,visitor,context){
+  const methodName = node.expression.name.getText();
+  const callArgs = 
+   ts.visitNode(node.arguments, visitor);
+  const expression = 
+  ts.visitNode(node.expression.expression, visitor, context);
+
+  return ts.createCall(
+    ts.createPropertyAccess(
+      ts.createPropertyAccess(
+        ts.createPropertyAccess(
+          ts.createIdentifier(nativeArray),
+          ts.createIdentifier("prototype")
+        ),
+        ts.createIdentifier(methodName)
+      ),
+      ts.createIdentifier("call")
+    ),
+    undefined,
+    [expression, ...callArgs]
+  );
+}
 exports.__esModule = true;
 const { ClassificationTypeNames } = require("typescript");
 var ts = require("typescript");
@@ -30,64 +55,24 @@ var transformer = function (typechecker) {
         ts.isCallExpression(node.expression.expression)
 
       ) {
-        return ts.visitEachChild(node, visitor, context);
-        
+        const type = typechecker.getTypeAtLocation(node.expression.expression);
+        if (typeIsArray(type)) {
+          return constructSafeCall(node,visitor,context);
+          const h = 'h'
+        }
       }
-
+        
       if (
-        ts.isCallExpression(node) &&
+        ts.isCallExpression(node)  &&
         ts.isPropertyAccessExpression(node.expression)
       ) {
         const type = typechecker.getTypeAtLocation(node.expression.expression);
-        const typeNameS = getType(type);
-        if (typeNameS === "Array") {
-          const methodName = node.expression.name.getText();
-          const callArgs = node.arguments;
-          const expression = node.expression.expression;
-          console.log("type ", typeNameS);
-          return ts.createCall(
-            ts.createPropertyAccess(
-              ts.createPropertyAccess(
-                ts.createPropertyAccess(
-                  ts.createIdentifier(nativeArray),
-                  ts.createIdentifier("prototype")
-                ),
-                ts.createIdentifier(methodName)
-              ),
-              ts.createIdentifier("call")
-            ),
-            undefined,
-            [expression, ...callArgs]
-          );
+        if (typeIsArray(type)) {
+          return constructSafeCall(node,visitor,context);
         }
       }
 
-      // literal
-      // can remove it
-      if (
-        ts.isCallExpression(node) && false &&
-        ts.isPropertyAccessExpression(node.expression) &&
-        ts.isArrayLiteralExpression(node.expression.expression)
-      ) {
-        const methodName = node.expression.name.getText();
-        const callArgs = node.arguments;
-        const literalArray = node.expression.expression.elements;
-        const args = [ts.createArrayLiteral(literalArray), ...callArgs];
-        return ts.createCall(
-          ts.createPropertyAccess(
-            ts.createPropertyAccess(
-              ts.createPropertyAccess(
-                ts.createIdentifier(nativeArray),
-                ts.createIdentifier("prototype")
-              ),
-              ts.createIdentifier(methodName)
-            ),
-            ts.createIdentifier("call")
-          ),
-          undefined,
-          args
-        );
-      }
+      
       return ts.visitEachChild(node, visitor, context);
     };
     return function (node) {
