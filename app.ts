@@ -31,6 +31,11 @@ declare var native;
     "check Node.childNodes ",
     document.querySelector("body").childNodes
   );
+  const node = document.querySelectorAll('li')[1];
+  console.log(
+    "check Node.childNodes 2 ",
+    node.childNodes
+  );
 
   let s = "asdasd";
   console.log("check Date.now ", Date.now());
@@ -69,6 +74,12 @@ declare var native;
       .filter(item => item !== "itemToFilter")
       .join()
   );
+  const obj = {
+    test: 1,
+    test2:2 ,
+    test3: 3
+  }
+  console.log('object keys join', Object.keys(obj).join())
   // console.log('set listeners')
   // window.addEventListener("mousemove", function (e) {
   //   console.log('app.ts mousemove event',e)

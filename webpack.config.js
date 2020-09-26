@@ -21,7 +21,7 @@ module.exports = {
                         return {
                       before: [
                           ArrayTransformer(program),
-                          NodeTransformer,
+                          NodeTransformer(program),
                           StringTransformer(program),
                         ]
                     }
