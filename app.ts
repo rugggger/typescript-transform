@@ -1,23 +1,11 @@
-import Compiler from "./src/compiler";
-import {
-  getPureWindow,
-  extendDOMWithCSNativeFunctions,
-} from "./src/getPureWindow";
+import "./src/nativeFunctions/nativeFunctions.js"
 
-let n = getPureWindow();
-extendDOMWithCSNativeFunctions();
+import Compiler from "./src/compiler";
 
 declare var native;
 
 (function () {
-  var Date = native.Date;
 
-  let source = `
-  const s = "this string doesnt need to change";
- // console.log(s);
-  let a = "this string needs a pure constructor";
-  console.log(a.toUpperCase());
-  `;
 
   //let compiler = new Compiler(source);
   //compiler.compileTransformer();

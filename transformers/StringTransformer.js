@@ -1,72 +1,85 @@
 "use strict";
 
+function getType(type) {
+  if (type && type.symbol && type.symbol.name) {
+    return type.symbol.name;
+  } else if (
+    type &&
+    type.literalType &&
+    type.literalType.symbol &&
+    type.literalType.symbol.name
+  ) {
+    return type.literalType.symbol.name;
+  } else if (
+    (typeof type.value === 'string') ||
+    ( type.intrinsicName === 'string')
+  ) return 'String'
+
+  return null;
+}
+function typeIsString(type) {
+  return getType(type) === "String";
+}
+function constructSafeCall(node, visitor, context) {
+  const methodName = node.expression.name.getText();
+  const callArgs = ts.visitNode(node.arguments, visitor);
+  const expression = ts.visitNode(node.expression.expression, visitor, context);
+
+  return ts.createCall(
+    ts.createPropertyAccess(
+      ts.createPropertyAccess(
+        ts.createPropertyAccess(
+          ts.createIdentifier(nativeArray),
+          ts.createIdentifier("prototype")
+        ),
+        ts.createIdentifier(methodName)
+      ),
+      ts.createIdentifier("call")
+    ),
+    undefined,
+    [expression, ...callArgs]
+  );
+}
 exports.__esModule = true;
+const { ClassificationTypeNames } = require("typescript");
 var ts = require("typescript");
-const nativeString = "nativeString";
+const nativeArray = "csString";
 var transformer = function (typechecker) {
   return function (context) {
     var visitor = function (node) {
-      // change "sdfsdfsdf".toLocaleUpperCase() ->
-      //
+      // 1. First check: chained expression
+      // if it's array.filter().join().map() then I want to change only the first part
+      // meaning
+      // if property access is a call expression - ignore and dont change
       if (
         ts.isCallExpression(node) &&
         ts.isPropertyAccessExpression(node.expression) &&
-        ts.isStringLiteral(node.expression.expression)
+        ts.isCallExpression(node.expression.expression)
       ) {
-        const methodName = node.expression.name.getText();
-        const callArgs = node.arguments;
-        const literalString = node.expression.expression.text;
-        const args = [ts.createStringLiteral(literalString), ...callArgs];
-        return ts.createCall(
-          ts.createPropertyAccess(
-            ts.createPropertyAccess(
-              ts.createPropertyAccess(
-                ts.createIdentifier(nativeString),
-                ts.createIdentifier("prototype")
-              ),
-              ts.createIdentifier(methodName)
-            ),
-            ts.createIdentifier("call")
-          ),
-          undefined,
-          args
-        );
+        const type = typechecker.getTypeAtLocation(node.expression.expression);
+        if (typeIsString(type)) {
+          return constructSafeCall(node, visitor, context);
+        }
       }
 
-      // change s.toLocaleUpperCase() ->
       if (
         ts.isCallExpression(node) &&
-        ts.isPropertyAccessExpression(node.expression) &&
-        // if has method
-        (node.expression.name) &&
-        // if the expression is a variable (not another expression)
-        (node.expression.expression.text) &&
-        // and it evaluates to string
-        typechecker.getTypeAtLocation(node.expression.expression)
-          .intrinsicName === "string"
+        ts.isPropertyAccessExpression(node.expression)
       ) {
-        const methodName = node.expression.name.getText();
-        const callArgs = node.arguments;
-        const varName = node.expression.expression.text;
-
-        return ts.createCall(
-          ts.createPropertyAccess(
-            ts.createPropertyAccess(
-              ts.createPropertyAccess(
-                ts.createIdentifier(nativeString),
-                ts.createIdentifier("prototype")
-              ),
-              ts.createIdentifier(methodName)
-            ),
-            ts.createIdentifier("call")
-          ),
-          undefined,
-          [
-            ts.createIdentifier(varName),
-            ...callArgs
-          ]
-        )
+        const type = typechecker.getTypeAtLocation(node.expression.expression);
+        if (typeIsString(type)) {
+          return constructSafeCall(node, visitor, context);
+        }
       }
+
+      try {
+      if (ts.isIdentifier(node) && node.text  === "String") {
+        return ts.createIdentifier(nativeArray);
+      }}
+      catch (e) {
+        console.log('failed ',node)
+      }
+
 
       return ts.visitEachChild(node, visitor, context);
     };

@@ -41,7 +41,7 @@ function constructSafeCall(node,visitor,context){
 exports.__esModule = true;
 const { ClassificationTypeNames } = require("typescript");
 var ts = require("typescript");
-const nativeArray = "nativeArray";
+const nativeArray = "csArray";
 var transformer = function (typechecker) {
   return function (context) {
     var visitor = function (node) {

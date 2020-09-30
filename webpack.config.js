@@ -1,6 +1,7 @@
 
 const path = require('path');
 const { default: ArrayTransformer } = require('./transformers/ArrayTransformer');
+const { default: commonTransformer } = require('./transformers/commonTransformer');
 const { default: NodeTransformer } = require('./transformers/NodeTransformer');
 const { default: StringTransformer } = require('./transformers/StringTransformer');
 
@@ -21,8 +22,9 @@ module.exports = {
                         return {
                       before: [
                           ArrayTransformer(program),
-                          NodeTransformer(program),
+                          NodeTransformer,
                           StringTransformer(program),
+                          commonTransformer
                         ]
                     }
                 },
