@@ -21,6 +21,7 @@
         window.Array.prototype.filter = ()=>"haha";
         window.String.prototype.substr = ()=>"haha"
         window.String.prototype.toLocaleUpperCase = ()=>"haha"
+        window.XMLHttpRequest.prototype.send = ()=>"haha xhr"
         Object.defineProperty(Node.prototype, 'childNodes', {
             get() {
                 if (this.surname) {

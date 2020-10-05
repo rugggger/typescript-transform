@@ -1,18 +1,7 @@
 "use strict";
 
-function getType(type) {
-  if (type && type.symbol && type.symbol.name) {
-    return type.symbol.name;
-  } else if (
-    type &&
-    type.literalType &&
-    type.literalType.symbol &&
-    type.literalType.symbol.name
-  ) {
-    return type.literalType.symbol.name;
-  }
-  return null;
-}
+const getType = require('./getType');
+
 function typeIsArray(type) {
   return getType(type) === 'Array'
 }
