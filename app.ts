@@ -7,9 +7,9 @@ declare var native;
 (function () {
 
 
-  //let compiler = new Compiler(source);
-  //compiler.compileTransformer();
-
+// comment !
+//@ts-dont-transform
+// do not transform this node
   console.log(
     "check array filter ",
     [1, 2, 3].filter((a) => a)
@@ -44,6 +44,7 @@ declare var native;
   console.log(arrTyped.filter(a => a.name === "yar"));
   console.log(arr.filter(a => a> 100));
   console.log(arr2.filter(a => a> 100));
+  
    console.log([1000,2000,3].filter(a => a> 100));
 
    let arr3 = ["i","t","w","o","r","k","s"]

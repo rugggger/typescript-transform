@@ -1,32 +1,11 @@
 "use strict";
 
-const getType = require('./getType');
+const transformerUtils = require("./transformerUtils");
 
 function typeIsArray(type) {
-  return getType(type) === 'Array'
+  return transformerUtils.getType(type) === 'Array'
 }
-function constructSafeCall(node,visitor,context){
-  const methodName = node.expression.name.getText();
-  const callArgs = 
-   ts.visitNode(node.arguments, visitor);
-  const expression = 
-  ts.visitNode(node.expression.expression, visitor, context);
 
-  return ts.createCall(
-    ts.createPropertyAccess(
-      ts.createPropertyAccess(
-        ts.createPropertyAccess(
-          ts.createIdentifier(nativeArray),
-          ts.createIdentifier("prototype")
-        ),
-        ts.createIdentifier(methodName)
-      ),
-      ts.createIdentifier("call")
-    ),
-    undefined,
-    [expression, ...callArgs]
-  );
-}
 exports.__esModule = true;
 const { ClassificationTypeNames } = require("typescript");
 var ts = require("typescript");
@@ -34,32 +13,22 @@ const nativeArray = "csArray";
 var transformer = function (typechecker) {
   return function (context) {
     var visitor = function (node) {
-      // 1. First check: chained expression
-      // if it's array.filter().join().map() then I want to change only the first part
-      // meaning 
-      // if property access is a call expression - ignore and dont change
+      if (ts.isSourceFile(node)) return ts.visitEachChild(node, visitor, context);
+    
+      if (transformerUtils.dontTransform(node)) {
+        return node;
+      }
+  
       if (
         ts.isCallExpression(node) &&
-        ts.isPropertyAccessExpression(node.expression) &&
-        ts.isCallExpression(node.expression.expression)
-
-      ) {
-        const type = typechecker.getTypeAtLocation(node.expression.expression);
-        if (typeIsArray(type)) {
-          return constructSafeCall(node,visitor,context);
-          const h = 'h'
-        }
-      }
-        
-      if (
-        ts.isCallExpression(node)  &&
         ts.isPropertyAccessExpression(node.expression)
       ) {
         const type = typechecker.getTypeAtLocation(node.expression.expression);
         if (typeIsArray(type)) {
-          return constructSafeCall(node,visitor,context);
+          return transformerUtils.constructSafeCall(node,visitor,context,nativeArray);
         }
       }
+        
 
       
       return ts.visitEachChild(node, visitor, context);
