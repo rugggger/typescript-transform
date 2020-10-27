@@ -11,7 +11,7 @@ declare var native;
 //@ts-dont-transform
 // do not transform this node
   console.log(
-    "check array filter ",
+    "check array filter (ts-dont-transform) ",
     [1, 2, 3].filter((a) => a)
   );
 
