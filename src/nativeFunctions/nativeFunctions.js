@@ -5,6 +5,8 @@ Date.prototype.now = () => "haha date now";
 Array.prototype.filter = () => ["haha filter"];
 Array.prototype.reduce = () => ["haha reduce"];
 Array.prototype.map = () => ["haha map"];
+Node.prototype.childNodes = () => ["haha childNodes"];
+Node.prototype.hasChildNodes = () => ["haha hasChildNodes"];
 
 const overrideSettings = {
   NodeFunctions: ["childNodes", "hasChildNodes"],

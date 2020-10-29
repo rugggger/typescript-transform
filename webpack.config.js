@@ -1,9 +1,8 @@
 
 const path = require('path');
-const { default: ArrayTransformer } = require('./transformers/ArrayTransformer');
 const { default: commonTransformer } = require('./transformers/commonTransformer');
 const { default: NodeTransformer } = require('./transformers/NodeTransformer');
-const { default: StringTransformer } = require('./transformers/StringTransformer');
+const { default: ArrayStringTransformer } = require('./transformers/ArrayStringTransformer');
 
 module.exports = {
     entry: path.join(__dirname, '/app.ts'),
@@ -21,9 +20,8 @@ module.exports = {
                     getCustomTransformers: program => {
                         return {
                       before: [
-                          ArrayTransformer(program),
+                          ArrayStringTransformer(program),
                           NodeTransformer,
-                          StringTransformer(program),
                           commonTransformer
                         ]
                     }

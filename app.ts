@@ -19,6 +19,10 @@ declare var native;
     "check Node.childNodes ",
     document.querySelector("body").childNodes
   );
+  console.log(
+    "check Node.hasChildNodes ",
+    document.querySelector("body").hasChildNodes()
+  );
   const node = document.querySelectorAll('li')[1];
   console.log(
     "check Node.childNodes 2 ",

@@ -2,7 +2,7 @@
           
 exports.__esModule = true;
 var ts = require("typescript");
-const overriddenProperties = ["childNodes"];
+const overriddenProperties = ["childNodes","hasChildNodes"];
 var transformer = function (context) {
   var visitor = function (node) {
     if (ts.isPropertyAccessExpression(node) && 

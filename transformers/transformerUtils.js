@@ -1,25 +1,33 @@
-
 var ts = require("typescript");
 
-module.exports.getType = type => {
+function getSymbolType(type) {
   if (type && type.symbol && type.symbol.name) {
     return type.symbol.name;
-  } else if (
+  }
+  return null;
+}
+function getLiteralType(type) {
+  if (
     type &&
     type.literalType &&
     type.literalType.symbol &&
     type.literalType.symbol.name
   ) {
     return type.literalType.symbol.name;
-  } else if (typeof type.value === "string" || type.intrinsicName === "string")
+  }
+  if (typeof type.value === "string" || type.intrinsicName === "string")
     return "String";
-
-  return null;
+}
+module.exports.getType = type => {
+  return getSymbolType(type) || getLiteralType(type) || null;
 };
 
 module.exports.constructSafeCall = (node, visitor, context, newIdentifier) => {
   const methodName = node.expression.name.getText();
-  const callArgs = ts.visitNode(node.arguments, visitor);
+  if (methodName === "call") {
+    return node;
+  }
+  const callArgs = ts.visitNodes(node.arguments, visitor);
   const expression = ts.visitNode(node.expression.expression, visitor, context);
 
   return ts.createCall(
@@ -38,23 +46,19 @@ module.exports.constructSafeCall = (node, visitor, context, newIdentifier) => {
   );
 };
 
-
-module.exports.dontTransform = (node)=>{
+module.exports.dontTransform = node => {
   let fullText = "";
   let comments;
   try {
-    node.getText();
     fullText = node.getFullText();
     comments = ts.getLeadingCommentRanges(fullText, 0);
-  }
-  catch(e){
-  }
+  } catch (e) {}
 
-  if (!comments) {return false;}
+  if (!comments) {
+    return false;
+  }
   return comments.some(comment => {
     const commentText = fullText.slice(comment.pos, comment.end);
-    return commentText.indexOf('@ts-dont-transform')!==-1
+    return commentText.indexOf("@ts-dont-transform") !== -1;
   });
-  
-
-}
+};
