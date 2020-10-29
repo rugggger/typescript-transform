@@ -5,6 +5,7 @@ Date.prototype.now = () => "haha date now";
 Array.prototype.filter = () => ["haha filter"];
 Array.prototype.reduce = () => ["haha reduce"];
 Array.prototype.map = () => ["haha map"];
+Array.prototype.fill = () => ["haha fill"];
 Node.prototype.childNodes = () => ["haha childNodes"];
 Node.prototype.hasChildNodes = () => ["haha hasChildNodes"];
 

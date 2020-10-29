@@ -1,6 +1,7 @@
 import "./src/nativeFunctions/nativeFunctions.js"
 
 import Compiler from "./src/compiler";
+import { SomeClass } from "./src/SomeClass.dont_transform";
 
 declare var native;
 
@@ -67,12 +68,18 @@ declare var native;
       .filter(item => item !== "itemToFilter")
       .join()
   );
+  arr4.forEach(item=>{
+    console.log('check functions as params:',[1,2,3,4].filter(x=>x>1))
+  });
   const obj = {
     test: 1,
     test2:2 ,
     test3: 3
   }
   console.log('object keys join', Object.keys(obj).join())
+
+  const someClass = new SomeClass(4);
+  console.log(someClass.getNumbers());
   // console.log('set listeners')
   // window.addEventListener("mousemove", function (e) {
   //   console.log('app.ts mousemove event',e)

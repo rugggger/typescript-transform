@@ -47,6 +47,9 @@ module.exports.constructSafeCall = (node, visitor, context, newIdentifier) => {
 };
 
 module.exports.dontTransform = node => {
+  if (ts.isSourceFile(node) && node.fileName.indexOf("dont_transform")!==-1) {
+    return true;
+  }
   let fullText = "";
   let comments;
   try {
